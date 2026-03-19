@@ -1,0 +1,172 @@
+@page "/blackjack"
+
+@using TP2_BlackJack.Services
+@using Microsoft.JSInterop
+
+<!-- Step 1: Injecting the service -->
+@inject ServiceBlackJack service
+<!-- Injecting JS runtime --> <!-- Allows us to call JavaScript functions from C# code and vice versa -->
+@inject IJSRuntime JS
+
+<h3>Blackjack</h3> <!-- Title of the page -->
+
+<!-- Step 2: Displays Quit button, if round is active -->
+@if (service.MancheActive && !service.MancheTerminee)
+{
+    <button class="btn btn-danger mb-4"
+            @onclick="service.Quitter">
+        Quitter la partie
+    </button>
+}
+
+<!-- Step 3: Display Argent always -->
+<p><strong>Argent : </strong> @service.Joueur.Argent $</p> <!-- Argent : 1000 $ as default -->
+
+<!-- Step 4: Displays Mise + Nouvelle Manche if round is not active -->
+@if (!service.MancheActive)
+{
+    <!-- Input -->
+    <input type="number" class="form-control mb-2"
+           style="width:150px"
+           @bind-value="mise"
+           @bind-value:event="oninput" />
+
+    <button class="btn btn-primary mb-2"
+            @onclick="() => service.NouvelleManche(mise)"> <!-- Lambda expression here because method has a parameter -->
+        Nouvelle manche
+    </button>
+}
+
+<!-- Step 5: Display Result banner when round is finished -->
+<!-- Check if the list 'Historiques' has any saved round history -->
+@if (service.MancheTerminee && service.Historiques.Any())
+{
+    <div class="alert alert-info mt-3 mb-3">
+        @service.Historiques.Last().Resultat <!-- Display the result of the last inactive round -->
+    </div>
+}
+
+<!-- Step 6: Dealer's section that comes first -->
+<h4 class="mt-3">Croupier</h4>
+
+<div>
+    <!-- Iterating over the list of 'cartes' belonging to the dealer at a current round -->
+    @for (int i = 0; i < service.Croupier.Main.Cartes.Count; i++)
+    {
+        <!-- If first card and round not finished, show the invisible card -->
+        if (i == 0 && !service.MancheTerminee)
+        {
+            <img src="/images/cartes/cache.png"
+                 style="width:90px; margin:5px;" />
+        }
+        else
+        {
+            <img src="@service.Croupier.Main.Cartes[i].CheminImage"
+                 style="width:90px; margin:5px;" />
+        }
+    }
+</div>
+
+<!-- Display the dealer's score when round is finished -->
+@if (!service.MancheActive)
+{
+    <p>Score Croupier: @service.Croupier.Main.Score</p>
+}
+
+<!-- Step 7: Player's section that comes second -->
+<h4>Joueur</h4>
+
+<div>
+    @foreach (var carte in service.Joueur.Main.Cartes)
+    {
+        <img src="@carte.CheminImage"
+             style="width:90px; margin:5px;" />
+    }
+</div>
+
+<!-- Always display the player's score whatever the state of the round -->
+<p>Score Joueur: @service.Joueur.Main.Score</p>
+
+<!-- Step 8: Action buttons, only during active rounds -->
+<!-- If round is active, display buttons 'Carte' and 'Rester' -->
+@if (service.MancheActive && !service.MancheTerminee)
+{
+    <button class="btn btn-success me-2"
+            @onclick="service.Tirer">
+        Carte
+    </button>
+
+    <button class="btn btn-warning"
+            @onclick="service.Rester">
+        Rester
+    </button>
+}
+
+<!-- Step 9 & 10: Historique des manches + Export Button -->
+@if (service.Historiques.Any())
+{
+    <hr />
+    <h4>Historique des manches</h4>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Date / Heure</th>
+                <th>Resultat</th>
+                <th>Mise ($)</th>
+                <th>Score Joueur</th>
+                <th>Score Croupier</th>
+                <th>Solde après</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in service.Historiques)
+            {
+                <tr>
+                    <td>@h.NumeroRonde</td>
+                    <td>@h.JouerA</td>
+                    <td>@h.Resultat</td>
+                    <td>@h.Mise</td>
+                    <td>@h.ScoreJoueur</td>
+                    <td>@h.ScoreCroupier</td>
+                    <td>@h.ArgentApres</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Step 10: Export Button -->
+    <button class="btn btn-secondary"
+            @onclick="Exporter">
+        Exporter l'historique (JSON)
+    </button>
+}
+
+@code {
+    private int mise = 100; // Setting mise 100 $ as default
+    
+    private async Task Exporter()
+    {
+        var bytes = service.ExporterHistoriqueJSON();
+        var fileName = $"historique_blackjack_{DateTime.Now:yyyyMMddHHmmss}.json"; // Format of the file name
+
+        var base64 = Convert.ToBase64String(bytes);
+
+        await JS.InvokeVoidAsync("downloadFile", fileName, base64); // Executing JavaScript function
+    }
+}
+
+<!-- This page is responsible for:
+     -Showing Argent.
+     -Input for Mise (default 100)
+     -Buttons:
+        1. Nouvelle Manche
+        2. Carte
+        3. Rester
+        4. Quitter
+    -Display player cards
+    -Display dealer cards (hide first if round is not finished)
+    -Show scores
+    -Show result message
+-->

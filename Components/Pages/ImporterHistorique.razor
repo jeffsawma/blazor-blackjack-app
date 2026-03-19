@@ -1,0 +1,72 @@
+@page "/importer-historique"
+
+@using TP2_BlackJack.Models
+@using TP2_BlackJack.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject ServiceBlackJack service
+
+<h3>Importer un historique JSON</h3>
+
+<p>
+    Sélectionnez un fichier <strong>historique_blackjack_*.json</strong> pour afficher les manches.
+</p>
+
+<InputFile OnChange="ChargerFichier" accept=".json" />
+<hr/>
+
+@if (historiquesImportes != null && historiquesImportes.Any())
+{
+    <h4 class="mt-4">Historique importé</h4>
+
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Résultat</th>
+                <th>Mise ($)</th>
+                <th>Score Joueur</th>
+                <th>Score Croupier</th>
+                <th>Solde après</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var h in service.Historiques)
+            {
+                <tr>
+                    <td>@h.NumeroRonde</td>
+                    <td>@h.JouerA</td>
+                    <td>@h.Resultat</td>
+                    <td>@h.Mise</td>
+                    <td>@h.ScoreJoueur</td>
+                    <td>@h.ScoreCroupier</td>
+                    <td>@h.ArgentApres</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+
+    private List<Historique>? historiquesImportes;
+    
+    private async Task ChargerFichier(InputFileChangeEventArgs e)
+    {
+        var fichier = e.File;
+
+        using var stream = fichier.OpenReadStream();
+        using var reader = new StreamReader(stream);
+        
+        var json = await reader.ReadToEndAsync();
+
+        service.ImporterHistoriqueJSON(json);
+        
+        historiquesImportes = service.Historiques;
+    }
+}
+
+<!-- 
+    This page handles: File upload and it's about external history files.
+    User selects a JSON file, it gets deserialized and then its content gets displayed in a table.
+-->
+

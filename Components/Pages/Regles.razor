@@ -1,0 +1,63 @@
+@page "/regles"
+
+<h3>Règles du Blackjack</h3>
+<p>
+    Le BlackJack est un jeu de cartes ou le but est d'avoir un score le plus proche de 21 sans le dépasser. Vous jouez contre le croupier.
+</p>
+
+<ul>
+    <li>Cartes numériques (2 à 10) : valeur faciale.</li>
+    <li>Figures (J, Q, K) : 10 points.</li>
+    <li>As (A) : 1 ou 11 points selon votre main.</li>
+</ul>
+
+<h4>Déroulement d'une manche</h4>
+<ol>
+    <li>Le joueur place sa mise.</li>
+    <li>Le joueur et le croupier reçoivent 2 cartes.</li>
+    <li>Une carte du croupier est cachée.</li>
+    <li>Le joueur peut tirer une carte <strong>(Hit)</strong> ou rester <strong>(Stand)</strong>.</li>
+    <li>Si le joueur dépasse 21 ==> <strong>Bust</strong> (défaite).</li>
+    <li>Le croupier révèle sa carte cachée et tire jusqu'à 17 minimum.</li>
+    <li>Le gagnant est celui qui a le score plus proche de 21.</li>
+</ol>
+
+<h4>BlackJack</h4>
+
+<p>
+    Si vous avez 21 points avec vos 2 premières cartes, vous obtenez un <strong>BlackJack!</strong> et gagnez la manche automatiquement.
+</p>
+
+<h4>Exemples visuels</h4>
+
+<div class="d-flex gap-4 mt-3">
+
+    <div class="text-center">
+        <img src="/images/cartes/A_S.png" style="width:90px; margin:5px;"  />
+        <p>As de pique (1 ou 11 points)</p>
+    </div>
+
+    <div class="text-center">
+        <img src="/images/cartes/10_H.png" style="width:90px; margin:5px;" />
+        <p>10 de coeur (10 points)</p>
+    </div>
+
+    <div class="text-center">
+        <img src="/images/cartes/R_D.png" style="width:90px; margin:5px;" />
+        <p>Roi de carreau (10 points)</p>
+    </div>
+</div>
+
+<h4>Exemples visuels</h4>
+
+<ul>
+    <li>Restez si votre score est proche de 21.</li>
+    <li>Tirez si votre score est faible.</li>
+    <li>Faites attention à la carte visible du croupier. </li>
+</ul>
+
+<NavLink href="/blackjack" class="btn btn-primary me-3">
+    Joueur au BlackJack
+</NavLink>
+
+<!-- This page will display the rules of Blacjack to the user if he's not aware of them -->

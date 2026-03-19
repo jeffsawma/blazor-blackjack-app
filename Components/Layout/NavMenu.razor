@@ -1,0 +1,39 @@
+﻿<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="/">TP2_BlackJack</a>
+    </div>
+</div>
+
+<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
+
+<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
+    <nav class="nav flex-column">
+        <div class="nav-item px-3">
+            <NavLink href="/blackjack" class="nav-link">
+                Jouer BlackJack
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink href="/regles" class="nav-link">
+                Règles Blackjack
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink href="/importer-historique" class="nav-link">
+                Importer Historique
+            </NavLink>
+        </div>
+
+        <div class="nav-item px-3">
+            <NavLink href="/apropos" class="nav-link">
+                À propos
+            </NavLink>
+        </div>
+
+        
+    </nav>
+</div>
+
+<!-- Adding links: (/, /blackjack, /importer-historique, /apropos, /regles) -->
