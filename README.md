@@ -52,3 +52,17 @@ Then open:
 http://localhost:5092
 
 ---
+
+## Screenshots
+
+![Accueil](screenshots/accueil.png)
+![BlackJack](screenshots/blackJack.png)
+![BlackJack](screenshots/blackJack2.png)
+![BlackJack](screenshots/blackJack3.png)
+![BlackJack](screenshots/blackJack4.png)
+![BlackJack](screenshots/blackJack5.png)
+![BlackJack](screenshots/blackJack6.png)
+![Exporter](screenshots/exporter.png)
+![Regles](screenshots/regles.png)
+![Importer](screenshots/importer.png)
+![APropos](screenshots/apropos.png)
